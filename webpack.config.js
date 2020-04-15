@@ -1,16 +1,18 @@
 const path = require("path");
 const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
   mode: "production",
   entry: path.resolve(__dirname, "./src/main.js"),
   output: {
     filename: "bundle.js",
-    path: path.resolve(__dirname, "./public"),
+    path: path.resolve(__dirname, "./dist"),
   },
   devServer: {
-    contentBase: "./public",
+    contentBase: "./dist",
   },
   module: {
     rules: [
@@ -37,7 +39,8 @@ module.exports = {
               fallback: {
                 loader: "file-loader",
                 options: {
-                  name: "./img/[name].[ext]",
+                  outputPath: "img",
+                  // name: "./img/[name].[ext]",
                 },
               },
             },
@@ -55,5 +58,7 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "style.css",
     }),
+    new CopyWebpackPlugin([{ from: "./public", to: "." }]),
+    new CleanWebpackPlugin(),
   ],
 };
